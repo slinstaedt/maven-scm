@@ -48,6 +48,8 @@ public class GitChangeLogConsumer
      */
     private static final String GIT_TIMESTAMP_PATTERN = "yyyy-MM-dd HH:mm:ss Z";
 
+    private static final String TAG_STRING = "tag:";
+
     /**
      * State machine constant: expecting header
      */
@@ -96,7 +98,7 @@ public class GitChangeLogConsumer
     /**
      * The pattern used to match git header lines
      */
-    private static final Pattern HEADER_PATTERN = Pattern.compile( "^commit (.*)" );
+    private static final Pattern HEADER_PATTERN = Pattern.compile( "^commit (\\w+)(?: \\((.+)\\))?$" );
 
     /**
      * The pattern used to match git author lines
@@ -244,10 +246,20 @@ public class GitChangeLogConsumer
         }
 
         currentRevision = matcher.group( 1 );
+        String pointers = matcher.group( 2 );
 
         currentChange = new ChangeSet();
 
         currentChange.setRevision( currentRevision );
+
+        if (pointers != null) {
+            for (String pointer : pointers.split(",")) {
+                if (pointer.trim().startsWith(TAG_STRING)) {
+                    String tag = pointer.substring(pointer.lastIndexOf(TAG_STRING) + TAG_STRING.length());
+                    currentChange.addTag(tag.trim());
+                }
+            }
+        }
 
         status = STATUS_GET_AUTHOR;
     }

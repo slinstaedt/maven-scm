@@ -115,7 +115,7 @@ public class ChangeSet
      * List of ChangeFile
      */
     private List<ChangeFile> files;
-    
+
     /**
      * The SCM revision id for this changeset.
      * @since 1.3
@@ -133,6 +133,8 @@ public class ChangeSet
      * @since 1.7
      */
     private Set<String> mergedRevisions;
+
+    private Set<String> tags;
 
     /**
      * @param strDate         Date the changes were committed
@@ -206,6 +208,21 @@ public class ChangeSet
         }
 
         files.add( file );
+    }
+
+    public Set<String> getTags() {
+        return tags;
+    }
+
+    public void addTag(String tag) {
+        if (tags == null) {
+            tags = new LinkedHashSet<String>();
+        }
+        tags.add(tag);
+    }
+
+    public void setTags(Set<String> tags) {
+        this.tags = tags;
     }
 
     /**

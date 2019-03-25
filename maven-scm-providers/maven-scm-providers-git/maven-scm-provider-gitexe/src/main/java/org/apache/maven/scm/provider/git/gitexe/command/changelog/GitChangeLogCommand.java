@@ -189,8 +189,9 @@ public class GitChangeLogCommand
             {
                 cl.createArg().setValue( "--until=" + StringUtils.escape( dateFormat.format( endDate ) ) );
             }
-
         }
+
+        cl.createArg().setValue("--decorate");
 
         // since this parameter is also used for the output formatting, we need it also if no start nor end date is
         // given
